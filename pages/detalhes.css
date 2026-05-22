@@ -1,0 +1,245 @@
+.detalhes-container {
+    padding: 3% 10%;
+}
+
+.filme-hero {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.filme-poster {
+    flex-shrink: 0;
+    width: 260px;
+}
+
+.filme-poster img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    display: block;
+}
+.filme-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.filme-titulo {
+    margin: 0;
+    font-size: 32px;
+    color: black;
+    line-height: 1.2;
+}
+
+.filme-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.meta-separador {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.meta-avaliacao {
+    color: blueviolet;
+    font-weight: bold;
+}
+.filme-generos ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.filme-generos ul li {
+    background-color: blueviolet;
+    color: white;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+.filme-detalhes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.detalhe-item {
+    display: flex;
+    gap: 10px;
+    font-size: 15px;
+}
+
+.detalhe-label {
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+    min-width: 90px;
+}
+
+.detalhe-valor {
+    color: black;
+}
+.filme-secao {
+    margin-bottom: 8px;
+}
+
+.secao-titulo {
+    font-size: 20px;
+    color: black;
+    border-bottom: 3px solid blueviolet;
+    padding-bottom: 6px;
+    margin-bottom: 16px;
+    margin-top: 0;
+}
+.filme-sinopse {
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.75);
+    line-height: 1.7;
+    margin: 0;
+}
+.lista-elenco {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.lista-elenco li {
+    background-color: beige;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 14px;
+    color: black;
+}
+.lista-premios {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lista-premios li {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.75);
+    padding-left: 16px;
+    position: relative;
+}
+
+.lista-premios li::before {
+    content: "★";
+    color: blueviolet;
+    position: absolute;
+    left: 0;
+}
+.filme-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filme-tags span {
+    background-color: rgba(138, 43, 226, 0.1);
+    color: blueviolet;
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+.trailer-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.trailer-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+}
+.lista-similares {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lista-similares li {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.75);
+    padding-left: 16px;
+    position: relative;
+}
+
+.lista-similares li::before {
+    content: "›";
+    color: blueviolet;
+    font-size: 18px;
+    position: absolute;
+    left: 0;
+    top: -1px;
+}
+
+@media (max-width: 1024px) {
+    .detalhes-container {
+        padding: 3% 6%;
+    }
+}
+
+@media (max-width: 768px) {
+    .detalhes-container {
+        padding: 24px 20px;
+    }
+
+    .filme-hero {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .filme-poster {
+        width: 200px;
+    }
+
+    .filme-titulo {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .filme-meta {
+        justify-content: center;
+    }
+
+    .filme-generos ul {
+        justify-content: center;
+    }
+
+    .detalhe-item {
+        flex-direction: column;
+        gap: 2px;
+    }
+}
