@@ -83,6 +83,10 @@ footer p {
     nav ul {
         gap: 40px;
     }
+
+    main {
+        padding: 3% 10%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -105,5 +109,9 @@ footer p {
         flex-wrap: wrap;
         justify-content: center;
         gap: 15px;
+    }
+
+    main {
+        padding: 5% 6%;
     }
 }
