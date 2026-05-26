@@ -1,0 +1,18 @@
+
+
+/* --- Estilos Genéricos de Destaques --- */
+#destaques-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px; /* Distância entre as prateleiras */
+    margin-bottom: 50px;
+}
+
+.carrossel-section h2 {
+    font-size: 1.5rem;
+    color: #4a5c2f;
+    margin-bottom: 15px;
+    border-left: 4px solid #8b9d5c;
+    padding-left: 10px;
+}
+

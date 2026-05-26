@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destaques - Cine Brasilis</title>
-    <link rel = "stylesheet" href = "/style/global.css">
+    <link rel="stylesheet" href="../style/global.css">
+    <link rel="stylesheet" href="../style/home.css"> <!-- Puxa os estilos de carrossel já prontos! -->
+    <link rel="stylesheet" href="../style/destaques.css"> <!-- O CSS de espaçamento entre as categorias -->
+    <link rel="stylesheet" href="../style/catalogo.css"> <!-- Puxamos os cards globais! -->
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="/img/logo.svg" alt="Cine Brasilis" style="height:60px;">
+            <img src="../img/logo.svg" alt="Cine Brasilis" style="height:60px;">
             <h1>Cine Brasilis</h1>
         </div>
         
@@ -28,7 +31,15 @@
 
     <main>
     
-        <p>Destaques</p>
+        <header style="margin-bottom: 30px; text-align: center;">
+            <h2>Descubra o Cinema Nacional</h2>
+            <p>Os maiores destaques organizados em seleções especiais para você maratonar.</p>
+        </header>
+
+        <div id="destaques-container">
+            <!-- Os carrosséis serão injetados via JS aqui -->
+            <p style="text-align: center;">Carregando galerias...</p>
+        </div>
 
     </main>
 
@@ -43,6 +54,7 @@
         </p>
         <p>UTFPR | 2026</p>
     </footer>
-</body>
+    <script src="../js/global.js"></script>
+    <script src="../js/destaques.js"></script>
 </body>
 </html>
