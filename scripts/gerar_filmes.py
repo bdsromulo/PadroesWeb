@@ -62,7 +62,7 @@ SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 
 # Saídas finais
-JSON_OUT  = os.path.join(PROJECT_ROOT, "js", "filmes.json")
+JSON_OUT  = os.path.join(PROJECT_ROOT, "data", "filmes.json")
 EXCEL_OUT = os.path.join(SCRIPT_DIR, "filmes.xlsx")
 
 # Arquivos de progresso
