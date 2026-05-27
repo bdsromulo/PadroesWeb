@@ -87,3 +87,8 @@
         stroke-width: 1.5px; /* Aumenta ligeiramente a borda para facilitar o toque */
     }
 }
+
+.filme-poster {
+    max-width: 400px;
+    border-radius: 5%;
+}
