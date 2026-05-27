@@ -103,6 +103,6 @@ function preencherLista(elementoId, arrayDeItems) {
 function exibirErro(mensagem) {
     const container = document.querySelector(".detalhes-container");
     if (container) {
-        container.innerHTML = `<h2>Oops!</h2><p>${mensagem}</p><a href="catálogo.html">Voltar ao catálogo</a>`;
+        container.innerHTML = `<h2>Oops!</h2><p>${mensagem}</p><a href="catalogo.html">Voltar ao catálogo</a>`;
     }
 }

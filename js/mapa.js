@@ -24,7 +24,7 @@ function gerarCardEstado(idEstado, container) {
     const bancoFilmes = {
         "BRRS": { nome: "Rio Grande do Sul", titulo: "O Tempo e o Vento", ano: 2013, diretor: "Jayme Monjardim", poster: "https://via.placeholder.com/300x450?text=O+Tempo+e+o+Vento" },
         "BRSP": { nome: "São Paulo", titulo: "O Ano em que Meus Pais Saíram de Férias", ano: 2006, diretor: "Cao Hamburger", poster: "https://via.placeholder.com/300x450?text=O+Ano+em+que..." },
-        "BRMG": { nome: "Minas Gerais", titulo: "O Menino no Espelho", ano: 2014, diretor: "Guilherme Fiúza", poster: "https://via.placeholder.com/300x450?text=O+Menino+no+Espelho" }
+        "BRMG": { nome: "Minas Gerais", titulo: "O Menino no Espelho", ano: 2014, diretor: "Guilherme Fiúza", poster: "https://image.tmdb.org/t/p/w500/l3inJ0LKrccEK5mNqQzmJlGjLPy.jpg" }
     };
 
     const dados = bancoFilmes[idEstado];
