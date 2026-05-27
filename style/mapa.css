@@ -1,9 +1,3 @@
-#mapa-brasil-container {
-    width: 100%;
-    height: 500px;
-    border: 1px solid #ccc;
-}
-
 .container-principal {
     display: flex;
     flex-direction: row;
@@ -24,9 +18,22 @@
 
 #info-estado-container {
     flex: 2;
-    width:100%;
+    width: 100%;
     position: sticky;
     top: 20px;
+    background-color: aliceblue;
+    border-radius: 10%;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#mapa-brasil-container:hover + #info-estado-container,
+#info-estado-container:hover {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 #mapa-brasil-container svg {
@@ -72,6 +79,8 @@
     #info-estado-container {
         position: static; /* Desliga o sticky, pois o card agora está no final da página */
         max-width: 100%;
+        opacity: 1;
+        transform: translateX(0);
     }
 
     .estado {
