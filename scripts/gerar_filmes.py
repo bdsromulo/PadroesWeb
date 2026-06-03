@@ -5,12 +5,12 @@ e gera js/filmes.json + scripts/filmes.xlsx.
 
 Fluxo em duas fases independentes:
 
-  FASE 1 — Coleta de IDs
-    Pagina o /discover mês a mês (1945 → hoje) e salva todos os IDs
+  FASE 1 - Coleta de IDs
+    Pagina o /discover mês a mês (1945 -> hoje) e salva todos os IDs
     únicos em ids_coletados.json. Se esse arquivo já existir, a fase 1
     é pulada completamente.
 
-  FASE 2 — Detalhes por filme
+  FASE 2 - Detalhes por filme
     Lê ids_coletados.json, processa em lotes de 50 e grava cada lote
     no filmes_parcial.jsonl. O checkpoint registra quantos IDs já foram
     processados. Se interrompido, retoma do último lote completo.
@@ -66,15 +66,22 @@ JSON_OUT  = os.path.join(PROJECT_ROOT, "data", "filmes.json")
 EXCEL_OUT = os.path.join(SCRIPT_DIR, "filmes.xlsx")
 
 # Arquivos de progresso
-IDS_FILE      = os.path.join(SCRIPT_DIR, "ids_coletados.json")   # fase 1 — permanente até extração completa
-JSONL_PARCIAL = os.path.join(SCRIPT_DIR, "filmes_parcial.jsonl") # fase 2 — filmes processados
-CHECKPOINT    = os.path.join(SCRIPT_DIR, ".checkpoint.json")     # fase 2 — quantos IDs já processados
+IDS_FILE      = os.path.join(SCRIPT_DIR, "ids_coletados.json")   # fase 1 - permanente até extração completa
+JSONL_PARCIAL = os.path.join(SCRIPT_DIR, "filmes_parcial.jsonl") # fase 2 - filmes processados
+CHECKPOINT    = os.path.join(SCRIPT_DIR, ".checkpoint.json")     # fase 2 - quantos IDs já processados
 
 ANO_INICIO   = 1945
 ANO_FIM      = date.today().year
 RATE_DELAY   = 0.27
 ELENCO_LIMIT = 10
 LOTE         = 50   # filmes gravados por vez no .jsonl
+
+# Campos adicionados nesta versão do script - usados para detectar filmes que
+# precisam de enriquecimento sem refazer a extração completa.
+CAMPOS_NOVOS = frozenset({
+    "imdb_id", "data_lancamento", "produtora", "produtoras",
+    "vote_count", "duracao", "adult", "classificacao", "backdrop_url", "tags",
+})
 
 # ---------------------------------------------------------------------------
 # HTTP
@@ -102,7 +109,7 @@ def requisicao(url, params=None, tentativas=4):
     return None
 
 # ---------------------------------------------------------------------------
-# FASE 1 — Coleta de IDs
+# FASE 1 - Coleta de IDs
 # ---------------------------------------------------------------------------
 
 def fatias_mensais(ano_inicio, ano_fim):
@@ -138,7 +145,7 @@ def buscar_ids_por_intervalo(data_inicio, data_fim):
         ids.extend(r["id"] for r in dados.get("results", []))
 
         if total_paginas == 500 and pagina == 1:
-            print(f"\n  [Aviso] {data_inicio}→{data_fim} atingiu 500 páginas.")
+            print(f"\n  [Aviso] {data_inicio}->{data_fim} atingiu 500 páginas.")
 
         pagina += 1
         time.sleep(RATE_DELAY)
@@ -154,7 +161,7 @@ def fase1_coletar_ids():
     if os.path.exists(IDS_FILE):
         with open(IDS_FILE, "r", encoding="utf-8") as f:
             ids = json.load(f)
-        print(f"[Fase 1] ids_coletados.json já existe — {len(ids)} IDs carregados. Pulando.\n")
+        print(f"[Fase 1] ids_coletados.json já existe - {len(ids)} IDs carregados. Pulando.\n")
         return ids
 
     fatias = fatias_mensais(ANO_INICIO, ANO_FIM)
@@ -162,14 +169,14 @@ def fase1_coletar_ids():
     todos_ids = set()
 
     print(f"[Fase 1] Fatiamento mensal: {total_fatias} intervalos "
-          f"({ANO_INICIO}-01 → {ANO_FIM}-12)\n")
+          f"({ANO_INICIO}-01 a {ANO_FIM}-12)\n")
 
     for i, (inicio, fim) in enumerate(fatias, 1):
         dados_fatia = buscar_ids_por_intervalo(inicio, fim)
         novos = set(dados_fatia) - todos_ids
         todos_ids.update(novos)
-        print(f"  [{i:>4}/{total_fatias}] {inicio} → {fim} "
-              f"— {len(dados_fatia):>4} encontrados, "
+        print(f"  [{i:>4}/{total_fatias}] {inicio} -> {fim} "
+              f"- {len(dados_fatia):>4} encontrados, "
               f"{len(novos):>4} novos (total: {len(todos_ids)})")
 
     ids_lista = list(todos_ids)
@@ -181,7 +188,7 @@ def fase1_coletar_ids():
     return ids_lista
 
 # ---------------------------------------------------------------------------
-# FASE 2 — Detalhes por filme
+# FASE 2 - Detalhes por filme
 # ---------------------------------------------------------------------------
 
 def slugify(text):
@@ -210,6 +217,43 @@ def extrair_trailer(videos):
         if v.get("type") == "Trailer" and v.get("site") == "YouTube":
             return f"https://www.youtube.com/embed/{v['key']}"
     return ""
+
+
+def extrair_tags(dados):
+    keywords = dados.get("keywords", {}).get("keywords", [])
+    return [k["name"] for k in keywords]
+
+
+def extrair_campos_novos(dados):
+    """Retorna apenas os campos novos. Usado para enriquecer filmes já existentes."""
+    path_backdrop = dados.get("backdrop_path") or ""
+    produtoras    = extrair_produtoras(dados)
+    return {
+        "imdb_id":         dados.get("imdb_id", ""),
+        "data_lancamento": dados.get("release_date") or "",
+        "produtora":       produtoras[0] if produtoras else "",
+        "produtoras":      produtoras,
+        "vote_count":      dados.get("vote_count", 0),
+        "duracao":         dados.get("runtime") or 0,
+        "adult":           dados.get("adult", False),
+        "classificacao":   extrair_classificacao_br(dados),
+        "backdrop_url":    poster_url(path_backdrop, "w1280") if path_backdrop else "",
+        "tags":            extrair_tags(dados),
+    }
+
+
+def carregar_filmes_existentes():
+    """Lê filmes.json e retorna dict tmdb_id -> filme. Retorna {} se não existir."""
+    if not os.path.exists(JSON_OUT):
+        return {}
+    with open(JSON_OUT, "r", encoding="utf-8") as f:
+        filmes = json.load(f)
+    return {filme["tmdb_id"]: filme for filme in filmes}
+
+
+def precisa_atualizar(filme):
+    """True se algum campo novo ainda não está no filme."""
+    return not CAMPOS_NOVOS.issubset(filme.keys())
 
 
 def extrair_produtoras(dados):
@@ -272,7 +316,7 @@ def montar_entrada(dados):
 
 
 def buscar_detalhes(tmdb_id):
-    params = {"append_to_response": "credits,videos,release_dates", "language": "pt-BR"}
+    params = {"append_to_response": "credits,videos,release_dates,keywords", "language": "pt-BR"}
     return requisicao(f"{BASE_URL}/movie/{tmdb_id}", params=params)
 
 
@@ -299,10 +343,18 @@ def salvar_checkpoint_fase2(processados):
 def fase2_buscar_detalhes(todos_ids):
     """
     Processa os IDs em lotes de LOTE, grava no .jsonl e salva checkpoint.
-    Retoma do último lote completo se interrompido.
+
+    Estratégia por filme:
+      - Já tem todos os campos novos -> copia do JSON existente sem chamar a API
+      - Existe mas falta campo novo   -> chama API, mescla só os campos novos
+      - Não existe                    -> chama API, extração completa
     """
-    total = len(todos_ids)
+    existentes     = carregar_filmes_existentes()
+    total          = len(todos_ids)
     ja_processados = carregar_checkpoint()
+
+    # Contadores para o relatório final
+    n_skip = n_enrich = n_novo = 0
 
     if ja_processados > 0:
         print(f"[Fase 2] Checkpoint encontrado: {ja_processados}/{total} já processados.")
@@ -317,8 +369,9 @@ def fase2_buscar_detalhes(todos_ids):
     ids_pendentes = todos_ids[ja_processados:]
     processados   = ja_processados
 
+    n_existentes   = sum(1 for tid in ids_pendentes if tid in existentes and not precisa_atualizar(existentes[tid]))
     print(f"\n[Fase 2] {len(ids_pendentes)} filmes a processar "
-          f"({ja_processados} já concluídos).\n")
+          f"({ja_processados} já concluídos, ~{n_existentes} sem chamada de API).\n")
 
     try:
         with open(JSONL_PARCIAL, "a", encoding="utf-8") as jsonl:
@@ -326,29 +379,45 @@ def fase2_buscar_detalhes(todos_ids):
 
             for tmdb_id in ids_pendentes:
                 processados += 1
-                dados = buscar_detalhes(tmdb_id)
+                filme_existente = existentes.get(tmdb_id)
 
-                if dados:
-                    filme = montar_entrada(dados)
-                    lote_atual.append(filme)
-                    print(f"  [{processados}/{total}] ✓ {filme['titulo']} ({filme['ano']})")
+                # --- SKIP: filme completo, sem chamada de API ---
+                if filme_existente and not precisa_atualizar(filme_existente):
+                    lote_atual.append(filme_existente)
+                    n_skip += 1
+                    if n_skip % 500 == 0:
+                        print(f"  [{processados}/{total}] (pulando filmes já completos...)")
+
                 else:
-                    print(f"  [{processados}/{total}] ✗ ID {tmdb_id} — sem dados, pulado")
+                    dados = buscar_detalhes(tmdb_id)
+                    time.sleep(RATE_DELAY)
 
-                time.sleep(RATE_DELAY)
+                    if dados:
+                        if filme_existente:
+                            # --- ENRICH: mescla só os campos novos ---
+                            novos = extrair_campos_novos(dados)
+                            filme = {**filme_existente, **novos}
+                            n_enrich += 1
+                            print(f"  [{processados}/{total}] ~ {filme['titulo']} (enriquecido)")
+                        else:
+                            # --- NOVO: extração completa ---
+                            filme = montar_entrada(dados)
+                            n_novo += 1
+                            print(f"  [{processados}/{total}] + {filme['titulo']} ({filme['ano']})")
+                        lote_atual.append(filme)
+                    else:
+                        print(f"  [{processados}/{total}] X ID {tmdb_id} - sem dados, pulado")
 
                 # Grava lote e salva checkpoint a cada LOTE filmes
                 if len(lote_atual) >= LOTE:
                     gravar_lote(lote_atual, jsonl)
                     salvar_checkpoint_fase2(processados)
-                    print(f"  — Lote gravado. Checkpoint: {processados}/{total} —")
                     lote_atual = []
 
             # Grava o lote final (< LOTE filmes)
             if lote_atual:
                 gravar_lote(lote_atual, jsonl)
                 salvar_checkpoint_fase2(processados)
-                print(f"  — Lote final gravado. Checkpoint: {processados}/{total} —")
 
     except KeyboardInterrupt:
         print("\n\nInterrompido. Gravando lote parcial e salvando checkpoint...")
@@ -361,6 +430,9 @@ def fase2_buscar_detalhes(todos_ids):
         sys.exit(0)
 
     print(f"\n[Fase 2] Concluída. {processados} filmes processados.")
+    print(f"  Pulados (já completos): {n_skip}")
+    print(f"  Enriquecidos:           {n_enrich}")
+    print(f"  Novos:                  {n_novo}")
 
 # ---------------------------------------------------------------------------
 # Exportação final
@@ -383,7 +455,7 @@ def salvar_json(filmes):
     os.makedirs(os.path.dirname(JSON_OUT), exist_ok=True)
     with open(JSON_OUT, "w", encoding="utf-8") as f:
         json.dump(filmes, f, ensure_ascii=False, indent=2)
-    print(f"JSON → {JSON_OUT}  ({len(filmes)} filmes)")
+    print(f"JSON -> {JSON_OUT}  ({len(filmes)} filmes)")
 
 
 def salvar_excel(filmes):
@@ -394,7 +466,7 @@ def salvar_excel(filmes):
                 lambda x: ", ".join(x) if isinstance(x, list) else x
             )
     df.to_excel(EXCEL_OUT, index=False, engine="openpyxl")
-    print(f"Excel → {EXCEL_OUT}")
+    print(f"Excel -> {EXCEL_OUT}")
 
 # ---------------------------------------------------------------------------
 # Main
@@ -402,14 +474,14 @@ def salvar_excel(filmes):
 
 def main():
     print("=" * 60)
-    print("Cine Brasilis — Extração completa TMDB")
+    print("Cine Brasilis - Extração completa TMDB")
     print(f"Autenticação: {'Bearer Token' if TOKEN else 'API Key (fallback)'}")
     print("=" * 60 + "\n")
 
-    # Fase 1 — IDs (pula se ids_coletados.json já existir)
+    # Fase 1 - IDs (pula se ids_coletados.json já existir)
     todos_ids = fase1_coletar_ids()
 
-    # Fase 2 — Detalhes
+    # Fase 2 - Detalhes
     fase2_buscar_detalhes(todos_ids)
 
     # Exportação final
