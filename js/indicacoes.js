@@ -244,7 +244,18 @@ function gerarRecomendacoes() {
     ultimasRecomendacoes = candidatosOrdenados.slice(0, 12);
 
     fecharModal();
+    renderizarSelecionados(referencias);
     renderizarResultados(ultimasRecomendacoes);
+}
+
+function renderizarSelecionados(referencias) {
+    const grid = document.getElementById("selecionados-grid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    
+    referencias.forEach(ref => {
+        grid.appendChild(criarCardFilme(ref));
+    });
 }
 
 function renderizarResultados(ranqueados) {

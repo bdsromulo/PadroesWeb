@@ -364,3 +364,25 @@ body.modal-aberto {
         max-width: none;
     }
 }
+
+/* Cards selecionados (Lembrete visual menor) */
+#selecionados-grid.catalogo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+}
+#selecionados-grid .filme-card {
+    min-height: auto;
+}
+#selecionados-grid .filme-titulo {
+    font-size: 0.75rem;
+    margin: 4px 0 0 0;
+    line-height: 1.2;
+}
+#selecionados-grid .filme-detalhes, 
+#selecionados-grid .filme-generos, 
+#selecionados-grid .filme-meta-card {
+    display: none;
+}
+#selecionados-grid .filme-info {
+    padding: 6px;
+}
