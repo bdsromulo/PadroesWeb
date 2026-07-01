@@ -36,10 +36,11 @@ function criarCardFilme(filme) {
         </div>
     `;
     
-    // Adiciona interatividade para ir até a página de Detalhes
+    // Adiciona interatividade para ir até a página de Detalhes.
+    // Usa o tmdb_id (único) para evitar ambiguidade entre filmes de mesmo título.
     card.addEventListener("click", () => {
-        // Assume que a maioria das páginas está na pasta /pages/
-        window.location.href = `detalhes.html?id=${filme.id}`;
+        const identificador = filme.tmdb_id || filme.id;
+        window.location.href = `detalhes.html?id=${identificador}`;
     });
     
     return card;

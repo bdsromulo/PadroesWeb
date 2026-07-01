@@ -17,9 +17,10 @@ async function carregarDetalhesFilme() {
     try {
         const response = await fetch("../data/filmes.json");
         const filmes = await response.json();
-        
-        // Busca o filme pelo ID
-        const filme = filmes.find(f => f.id === filmeId);
+
+        // Busca pelo tmdb_id (único). Mantém o slug como fallback para links antigos.
+        const filme = filmes.find(f => String(f.tmdb_id) === filmeId)
+            || filmes.find(f => f.id === filmeId);
 
         if (!filme) {
             exibirErro("Filme não encontrado.");
