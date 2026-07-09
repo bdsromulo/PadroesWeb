@@ -15,6 +15,15 @@ let poolFilmes          = [];    // internacionais (selecao)
 let selecionados        = new Set();   // ids internacionais selecionados
 let ultimasRecomendacoes = [];   // guarda o ranking atual (para o racional)
 let tagIDF              = new Map();    // tag -> peso de raridade (IDF)
+let termoBusca          = "";          // filtro atual da barra de busca do modal
+
+// Normaliza texto para busca (minusculo, sem acentos)
+function normalizar(txt) {
+    return (txt || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "");
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     iniciar();
@@ -34,6 +43,13 @@ async function iniciar() {
         atualizarBarra();
 
         document.getElementById("btn-iniciar").addEventListener("click", abrirModal);
+        const buscaInput = document.getElementById("pool-busca-input");
+        if (buscaInput) {
+            buscaInput.addEventListener("input", e => {
+                termoBusca = e.target.value;
+                renderizarPool();
+            });
+        }
         document.getElementById("btn-fechar-modal").addEventListener("click", fecharModal);
         document.getElementById("btn-recomendar").addEventListener("click", gerarRecomendacoes);
         document.getElementById("btn-limpar-selecao").addEventListener("click", limparSelecao);
@@ -79,7 +95,15 @@ function renderizarPool() {
 
     const limiteAtingido = selecionados.size >= MAX_SELECAO;
 
-    poolFilmes.forEach(filme => {
+    const termo = normalizar(termoBusca);
+    const visiveis = termo
+        ? poolFilmes.filter(f => normalizar(f.titulo).includes(termo))
+        : poolFilmes;
+
+    const aviso = document.getElementById("pool-vazio");
+    if (aviso) aviso.hidden = visiveis.length > 0;
+
+    visiveis.forEach(filme => {
         const tile = document.createElement("div");
         tile.className = "selecao-tile";
         tile.dataset.id = filme.id;

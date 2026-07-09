@@ -7,7 +7,9 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+.venv-ml/
 venv/
+scripts/.cache/
 
 # Sistema operacional
 .DS_Store
