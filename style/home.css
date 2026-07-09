@@ -7,11 +7,12 @@
 }
 
 .filme-card {
-    background: white;
+    background: var(--cor-card);
+    border: 1px solid var(--cor-borda);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease, border-color 0.3s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -44,13 +45,13 @@
 .filme-titulo {
     margin: 0;
     font-size: 1.1rem;
-    color: #333;
+    color: var(--cor-texto);
 }
 
 .filme-detalhes, .filme-generos {
     margin: 0;
     font-size: 0.9rem;
-    color: #666;
+    color: var(--cor-texto-suave);
 }
 
 /* --- Card de contagem do acervo (Home) --- */
@@ -99,7 +100,7 @@
 }
 
 .explore-card {
-    background: #fff;
+    background: var(--cor-card);
     border: 1px solid var(--cor-borda);
     border-radius: var(--raio-card);
     padding: 20px 16px 16px;
@@ -112,7 +113,7 @@
 
 .explore-card:hover {
     border-color: var(--cor-acento);
-    background: #f6fdf9;
+    background: var(--cor-card-hover);
 }
 
 .explore-titulo {

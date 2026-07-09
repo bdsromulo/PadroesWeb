@@ -7,10 +7,14 @@
 }
 
 .membro-card {
-    background-color: aliceblue;
+    background-color: var(--cor-card-hover);
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto);
     text-align: center;
     width: 200px;
-    border-radius: 10%;
+    border-radius: 12px;
+    padding: 20px 15px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .foto-container {

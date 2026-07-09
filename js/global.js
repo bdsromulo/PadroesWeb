@@ -1,5 +1,37 @@
 "use strict";
 
+// Gerenciamento de Tema (Dark Mode / Light Mode)
+(function inicializarTema() {
+    const temaSalvo = localStorage.getItem("cinebrasilis_tema");
+    const prefereEscuro = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const temaInicial = temaSalvo || (prefereEscuro ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", temaInicial);
+})();
+
+function atualizarIconeBotaoTema() {
+    const btn = document.getElementById("btn-tema");
+    if (!btn) return;
+    const temaAtual = document.documentElement.getAttribute("data-theme");
+    btn.innerHTML = temaAtual === "dark" ? "☀️ <span>Claro</span>" : "🌙 <span>Escuro</span>";
+    btn.setAttribute("title", temaAtual === "dark" ? "Mudar para modo claro" : "Mudar para modo escuro");
+}
+
+function alternarTema() {
+    const temaAtual = document.documentElement.getAttribute("data-theme");
+    const novoTema = temaAtual === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", novoTema);
+    localStorage.setItem("cinebrasilis_tema", novoTema);
+    atualizarIconeBotaoTema();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    atualizarIconeBotaoTema();
+    const btn = document.getElementById("btn-tema");
+    if (btn) {
+        btn.addEventListener("click", alternarTema);
+    }
+});
+
 // Funções Globais reaproveitadas em várias páginas
 
 /**

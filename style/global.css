@@ -4,6 +4,9 @@
 
 
 :root {
+    --cor-fundo:        rgb(250, 250, 250);
+    --cor-card:         #ffffff;
+    --cor-card-hover:   #f5f7fa;
     --cor-marinho:      #0a1628;
     --cor-superficie:   #16213e;
     --cor-destaque:     #FFDF00;
@@ -11,12 +14,27 @@
     --cor-acento-hover: #00b544;
     --cor-texto:        #1a1a1a;
     --cor-texto-claro:  #eaeaea;
-    --cor-texto-suave:  #9aa5b1;
+    --cor-texto-suave:  #666666;
     --cor-borda:        #e6e6e6;
     --raio-card:        10px;
 
     --fonte-titulo: 'Oswald', sans-serif;
     --fonte-corpo: 'Rubik', sans-serif;
+}
+
+[data-theme="dark"] {
+    --cor-fundo:        #080f1a;
+    --cor-card:         #111d30;
+    --cor-card-hover:   #182842;
+    --cor-marinho:      #060c16;
+    --cor-superficie:   #111d30;
+    --cor-destaque:     #FFDF00;
+    --cor-acento:       #10b981;
+    --cor-acento-hover: #34d399;
+    --cor-texto:        #e6edf3;
+    --cor-texto-claro:  #eaeaea;
+    --cor-texto-suave:  #9aa5b1;
+    --cor-borda:        #1e2e4a;
 }
 
 body {
@@ -25,7 +43,8 @@ body {
     font-family: var(--fonte-corpo);
     line-height: 1.5;
     color: var(--cor-texto);
-    background-color: rgb(250, 250, 250);
+    background-color: var(--cor-fundo);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -53,6 +72,39 @@ header {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.header-topo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.btn-tema {
+    position: absolute;
+    right: 0;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(6px);
+}
+
+.btn-tema:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 main{
@@ -67,12 +119,13 @@ main p{
 
 /* Container visual reutilizável para separar blocos de conteúdo */
 .secao-bloco {
-    background: #fff;
-    border: 1px solid #e6e6e6;
+    background: var(--cor-card);
+    border: 1px solid var(--cor-borda);
     border-radius: 10px;
     padding: 24px 28px;
     margin-bottom: 24px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 .secao-bloco h2,
 .secao-bloco h3 {
@@ -156,6 +209,15 @@ footer p {
         flex-direction: column;
         align-items: center;
         padding: 20px;
+    }
+
+    .header-topo {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-tema {
+        position: static;
     }
 
     .logo{

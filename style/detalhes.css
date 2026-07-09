@@ -112,11 +112,11 @@
 }
 .detalhe-label {
     font-weight: bold;
-    color: rgba(0, 0, 0, 0.5);
+    color: var(--cor-texto-suave);
     min-width: 90px;
 }
 .detalhe-valor {
-    color: black;
+    color: var(--cor-texto);
 }
 .detalhe-link {
     text-decoration: none;
@@ -133,7 +133,7 @@
     opacity: 0.75;
 }
 .detalhe-vazio {
-    color: rgba(0,0,0,0.35);
+    color: var(--cor-texto-suave);
     font-size: 13px;
 }
 .tag-chip {
@@ -170,12 +170,12 @@
     gap: 10px;
 }
 .lista-elenco li {
-    background-color: #f0f0f0;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    background-color: var(--cor-card-hover);
+    border: 1px solid var(--cor-borda);
     border-radius: 6px;
     padding: 6px 14px;
     font-size: 14px;
-    color: black;
+    color: var(--cor-texto);
 }
 .lista-premios {
     list-style: none;
@@ -187,7 +187,7 @@
 }
 .lista-premios li {
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.75);
+    color: var(--cor-texto);
     padding-left: 16px;
     position: relative;
 }

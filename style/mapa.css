@@ -21,14 +21,16 @@
     min-width: 280px;
     position: sticky;
     top: 20px;
-    background-color: #f8f9fa;
+    background-color: var(--cor-card);
+    color: var(--cor-texto);
     border-radius: 12px;
-    border-top: 5px solid #1b5e20;
+    border: 1px solid var(--cor-borda);
+    border-top: 5px solid var(--cor-acento);
     padding: 20px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     opacity: 0;
     transform: translateX(40px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s ease;
 }
 
 #mapa-brasil-container:hover + #info-estado-container,
@@ -42,10 +44,11 @@
 .painel-estado-header h3 {
     margin: 0;
     font-size: 1.3rem;
+    color: var(--cor-texto);
 }
 .painel-uf {
     font-size: 0.85rem;
-    background: #1b5e20;
+    background: var(--cor-acento);
     color: #fff;
     padding: 2px 8px;
     border-radius: 4px;
@@ -54,13 +57,13 @@
 }
 .painel-contagem {
     margin: 4px 0 8px;
-    color: #555;
+    color: var(--cor-texto-suave);
     font-size: 0.9rem;
 }
 .painel-dica {
     margin: 0;
     font-size: 0.85rem;
-    color: #888;
+    color: var(--cor-texto-suave);
     font-style: italic;
 }
 
