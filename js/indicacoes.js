@@ -259,44 +259,73 @@ function avaliar(candidato, referencias) {
 function gerarRecomendacoes() {
     const referencias = poolFilmes.filter(f => selecionados.has(f.id));
 
-    // --- LÓGICA BASEADA EM BERT + AFINIDADE DE GÊNERO ---
-    // Chaveamos por tmdb_id (único). O slug "id" tem ~998 colisões na base
-    // brasileira, o que fazia o app exibir o filme errado.
+    // --- BERT + GÊNERO, com NORMALIZAÇÃO POR ÂNCORA e representação mínima ---
+    // Chaveamos por tmdb_id (o slug "id" tem ~998 colisões na base brasileira).
     const mapFilmesBR = new Map();
     filmesBR.forEach(f => mapFilmesBR.set(f.tmdb_id, f));
 
-    const scorePorFilme = new Map();
+    const LIMITE = 12;
+    const passaFiltros = (fb) =>
+        fb && fb.poster_url && fb.avaliacao > 0 &&
+        (!apenasLongas || fb.metragem === "Longa");
+
+    // Para cada âncora: normaliza os scores pelo melhor match dela (escala 0-1),
+    // para que âncoras de escalas diferentes pesem de forma comparável.
+    const scoreTotal = new Map();          // tmdb_id -> soma normalizada
+    const contribPorAncora = [];           // por âncora: [{chave, norm}] desc
 
     referencias.forEach(ref => {
-        if (ref.similares_nacionais && Array.isArray(ref.similares_nacionais)) {
-            ref.similares_nacionais.forEach(sim => {
-                const chave = sim.tmdb_id != null ? sim.tmdb_id : sim.id;
-                const score = sim.score;
-                if (!scorePorFilme.has(chave)) {
-                    scorePorFilme.set(chave, 0);
-                }
-                // Soma scores de múltiplas referências (intersecção)
-                scorePorFilme.set(chave, scorePorFilme.get(chave) + score);
-            });
-        }
-    });
+        const sims = (ref.similares_nacionais || [])
+            .filter(s => passaFiltros(mapFilmesBR.get(s.tmdb_id != null ? s.tmdb_id : s.id)));
+        if (!sims.length) { contribPorAncora.push([]); return; }
 
-    const candidatosOrdenados = [];
-    scorePorFilme.forEach((score, id) => {
-        const filmeObj = mapFilmesBR.get(id);
-        if (!filmeObj || !filmeObj.poster_url || !(filmeObj.avaliacao > 0)) return;
-        // Filtro opcional: apenas longas-metragens (> 70 min)
-        if (apenasLongas && filmeObj.metragem !== "Longa") return;
-        candidatosOrdenados.push({
-            filme: filmeObj,
-            score: score * 100, // Ajuste para exibição
-            conexoes: [] // Conexões removidas devido a nova arquitetura sem Racional
+        const maxScore = Math.max(...sims.map(s => s.score)) || 1;
+        const contrib = [];
+        sims.forEach(s => {
+            const chave = s.tmdb_id != null ? s.tmdb_id : s.id;
+            const norm = s.score / maxScore;               // 0..1 dentro da âncora
+            scoreTotal.set(chave, (scoreTotal.get(chave) || 0) + norm);
+            contrib.push({ chave, norm });
         });
+        contrib.sort((a, b) => b.norm - a.norm);
+        contribPorAncora.push(contrib);
     });
 
-    candidatosOrdenados.sort((a, b) => b.score - a.score);
+    // Ranking global (privilegia quem tem maior match somado)
+    const ranking = [...scoreTotal.entries()]
+        .map(([chave, total]) => ({ chave, total, filme: mapFilmesBR.get(chave) }))
+        .sort((a, b) => b.total - a.total);
 
-    ultimasRecomendacoes = candidatosOrdenados.slice(0, 12);
+    // Meio-termo: garante ao menos 1 filme do melhor match de CADA âncora,
+    // depois preenche o resto pelo ranking global.
+    const MIN_POR_ANCORA = referencias.length > 1 ? 1 : 0;
+    const escolhidos = new Set();
+    const finais = [];
+
+    const adicionar = (chave) => {
+        if (escolhidos.has(chave) || finais.length >= LIMITE) return;
+        escolhidos.add(chave);
+        finais.push({
+            filme: mapFilmesBR.get(chave),
+            score: (scoreTotal.get(chave) || 0) * 100,
+            conexoes: []
+        });
+    };
+
+    if (MIN_POR_ANCORA > 0) {
+        contribPorAncora.forEach(contrib => {
+            let add = 0;
+            for (const c of contrib) {
+                if (add >= MIN_POR_ANCORA) break;
+                if (!escolhidos.has(c.chave)) { adicionar(c.chave); add++; }
+            }
+        });
+    }
+    ranking.forEach(x => adicionar(x.chave));
+
+    // Reordena para exibir do maior match para o menor
+    finais.sort((a, b) => b.score - a.score);
+    ultimasRecomendacoes = finais.slice(0, LIMITE);
 
     fecharModal();
     renderizarSelecionados(referencias);
