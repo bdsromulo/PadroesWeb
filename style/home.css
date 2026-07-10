@@ -201,11 +201,21 @@
 @media (max-width: 768px) {
     .carrossel-item {
         flex: 0 0 calc(50% - 20px); /* Em tablets exibe 2 */
+        min-width: 0;               /* impede o card de transbordar a janela */
     }
 }
 
 @media (max-width: 480px) {
     .carrossel-item {
         flex: 0 0 100%; /* Em celulares mostra 1 inteiro */
+        min-width: 0;
+    }
+    .carrossel-container {
+        gap: 6px;       /* mais espaço para o card */
+    }
+    .carrossel-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
     }
 }
