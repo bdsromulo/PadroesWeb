@@ -134,6 +134,56 @@ body.modal-aberto {
     background: #eee;
 }
 
+/* Roda dentada + dropdown de opções de indicação */
+.config-wrap {
+    position: relative;
+    display: inline-flex;
+}
+.btn-config {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--cor-texto);
+    transition: background 0.2s, border-color 0.2s;
+}
+.btn-config:hover {
+    background: var(--cor-card-hover);
+    border-color: var(--cor-acento);
+}
+.config-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 10;
+    background: var(--cor-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    padding: 12px 14px;
+    min-width: 250px;
+}
+.config-opcao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--cor-texto);
+    cursor: pointer;
+}
+.config-opcao input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--cor-acento);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
 /* Corpo rolável do modal (lista vertical com scroll) */
 /* Barra de busca do modal (fixa entre o topo e a grade rolável) */
 .pool-busca {

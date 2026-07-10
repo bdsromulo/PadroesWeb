@@ -61,6 +61,16 @@
                     <div class="modal-topo-acoes">
                         <button id="btn-limpar-selecao" class="btn-limpar" type="button">Limpar</button>
                         <button id="btn-recomendar" class="btn-recomendar" type="button" disabled>Gerar indicações</button>
+                        <div class="config-wrap">
+                            <button id="btn-config" class="btn-config" type="button"
+                                    aria-label="Opções de indicação" aria-haspopup="true" aria-expanded="false">⚙️</button>
+                            <div id="config-dropdown" class="config-dropdown" hidden>
+                                <label class="config-opcao">
+                                    <input type="checkbox" id="chk-apenas-longas">
+                                    <span>Me indique apenas longa-metragens</span>
+                                </label>
+                            </div>
+                        </div>
                         <button id="btn-fechar-modal" class="btn-fechar" type="button" aria-label="Fechar">✕</button>
                     </div>
                 </header>

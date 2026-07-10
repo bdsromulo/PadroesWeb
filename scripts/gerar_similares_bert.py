@@ -38,7 +38,7 @@ except ImportError as e:
 # --- Pesos do ranking (ajustaveis; override por env para calibrar) --------
 W_GENERO = float(os.environ.get("W_GENERO", 0.85))  # afinidade de genero somada ao cosseno
 W_POP    = float(os.environ.get("W_POP", 0.02))     # leve desempate por popularidade
-TOP_N    = int(os.environ.get("TOP_N", 15))         # quantos similares guardar
+TOP_N    = int(os.environ.get("TOP_N", 25))         # quantos similares guardar (folga p/ filtro de longas)
 
 MODELO = "paraphrase-multilingual-MiniLM-L12-v2"
 

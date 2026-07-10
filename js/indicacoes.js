@@ -16,6 +16,7 @@ let selecionados        = new Set();   // ids internacionais selecionados
 let ultimasRecomendacoes = [];   // guarda o ranking atual (para o racional)
 let tagIDF              = new Map();    // tag -> peso de raridade (IDF)
 let termoBusca          = "";          // filtro atual da barra de busca do modal
+let apenasLongas        = false;       // "Me indique apenas longa-metragens"
 
 // Normaliza texto para busca (minusculo, sem acentos)
 function normalizar(txt) {
@@ -48,6 +49,31 @@ async function iniciar() {
             buscaInput.addEventListener("input", e => {
                 termoBusca = e.target.value;
                 renderizarPool();
+            });
+        }
+
+        // Roda dentada -> dropdown de opções (ex.: apenas longas)
+        const btnConfig = document.getElementById("btn-config");
+        const dropConfig = document.getElementById("config-dropdown");
+        if (btnConfig && dropConfig) {
+            btnConfig.addEventListener("click", e => {
+                e.stopPropagation();
+                dropConfig.hidden = !dropConfig.hidden;
+                btnConfig.setAttribute("aria-expanded", String(!dropConfig.hidden));
+            });
+            // fecha ao clicar fora
+            document.addEventListener("click", e => {
+                if (!dropConfig.hidden &&
+                    !dropConfig.contains(e.target) && e.target !== btnConfig) {
+                    dropConfig.hidden = true;
+                    btnConfig.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+        const chkLongas = document.getElementById("chk-apenas-longas");
+        if (chkLongas) {
+            chkLongas.addEventListener("change", e => {
+                apenasLongas = e.target.checked;
             });
         }
         document.getElementById("btn-fechar-modal").addEventListener("click", fecharModal);
@@ -97,7 +123,9 @@ function renderizarPool() {
 
     const termo = normalizar(termoBusca);
     const visiveis = termo
-        ? poolFilmes.filter(f => normalizar(f.titulo).includes(termo))
+        ? poolFilmes.filter(f =>
+            normalizar(f.titulo).includes(termo) ||
+            normalizar(f.titulo_original).includes(termo))
         : poolFilmes;
 
     const aviso = document.getElementById("pool-vazio");
@@ -256,13 +284,14 @@ function gerarRecomendacoes() {
     const candidatosOrdenados = [];
     scorePorFilme.forEach((score, id) => {
         const filmeObj = mapFilmesBR.get(id);
-        if (filmeObj && filmeObj.poster_url && filmeObj.avaliacao > 0) {
-            candidatosOrdenados.push({
-                filme: filmeObj,
-                score: score * 100, // Ajuste para exibição
-                conexoes: [] // Conexões removidas devido a nova arquitetura sem Racional
-            });
-        }
+        if (!filmeObj || !filmeObj.poster_url || !(filmeObj.avaliacao > 0)) return;
+        // Filtro opcional: apenas longas-metragens (> 70 min)
+        if (apenasLongas && filmeObj.metragem !== "Longa") return;
+        candidatosOrdenados.push({
+            filme: filmeObj,
+            score: score * 100, // Ajuste para exibição
+            conexoes: [] // Conexões removidas devido a nova arquitetura sem Racional
+        });
     });
 
     candidatosOrdenados.sort((a, b) => b.score - a.score);

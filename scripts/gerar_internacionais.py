@@ -220,6 +220,7 @@ def main():
 
         filme = g.montar_entrada(dados)
         filme["origem"] = "internacional"
+        filme["titulo_original"] = dados.get("original_title", "")  # p/ busca bilingue
         filme.pop("regiao", None)
         filme.pop("estado", None)
 
