@@ -209,6 +209,29 @@ footer p {
     color: rgba(255, 255, 255, 0.55);
 }
 
+/* Menu de navegação do rodapé */
+.footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 24px;
+    margin-bottom: 8px;
+}
+.footer-nav a {
+    color: var(--cor-texto-claro);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+.footer-nav a:hover {
+    color: var(--cor-destaque);
+}
+.footer-direitos {
+    font-style: normal;
+    font-size: 13px;
+}
+
 @media (max-width: 1024px) {
     
     nav ul {

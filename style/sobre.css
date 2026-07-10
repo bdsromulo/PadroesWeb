@@ -1,3 +1,12 @@
+/* Atribuição obrigatória do TMDB */
+.tmdb-atribuicao {
+    font-size: 0.85rem;
+    color: var(--cor-texto-suave);
+    border-top: 1px solid var(--cor-borda);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
 /* Bloco de destaque: missão / importância do cinema nacional */
 .missao-destaque {
     background: var(--cor-card);
