@@ -25,6 +25,15 @@ async function carregarFilmes() {
         popularFiltroEstados();
         renderizarPagina(paginaAtual);
         configurarFiltros();
+
+        // Ao trocar de idioma: re-traduz gêneros dinâmicos e re-renderiza
+        window.aoTrocarIdioma = () => {
+            document.querySelectorAll("#filtro-genero option").forEach(o => {
+                if (o.value) o.textContent = traduzirGenero(o.value);
+            });
+            atualizarContagem();
+            renderizarPagina(paginaAtual);
+        };
     } catch (error) {
         console.error("Erro ao carregar filmes:", error);
     }
@@ -43,7 +52,7 @@ function popularFiltroGeneros() {
     generosUnicos.forEach(genero => {
         const option = document.createElement("option");
         option.value = genero;
-        option.textContent = genero;
+        option.textContent = traduzirGenero(genero);
         select.appendChild(option);
     });
 }
@@ -214,9 +223,10 @@ function atualizarContagem() {
     const el = document.getElementById("catalogo-contagem");
     if (!el) return;
     const total = filmesFiltrados.length;
+    const locale = idiomaAtual() === "en" ? "en-US" : "pt-BR";
     el.textContent = total === todosFilmes.length
-        ? `${total.toLocaleString("pt-BR")} filmes`
-        : `${total.toLocaleString("pt-BR")} filmes encontrados`;
+        ? `${total.toLocaleString(locale)} ${t("cat.filmes")}`
+        : `${total.toLocaleString(locale)} ${t("cat.filmesEncontrados")}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -235,7 +245,7 @@ function renderizarPagina(pagina) {
     const filmesDaPagina = filmesFiltrados.slice(indexInicio, indexFim);
 
     if (filmesDaPagina.length === 0) {
-        grid.innerHTML = "<p class='catalogo-vazio'>Nenhum filme encontrado para os filtros selecionados.</p>";
+        grid.innerHTML = `<p class='catalogo-vazio'>${t("cat.vazio")}</p>`;
         document.getElementById("paginacao-container").innerHTML = "";
         return;
     }
@@ -257,7 +267,7 @@ function renderizarControlesPaginacao() {
     if (totalPaginas <= 1) return;
 
     const btnAnterior = document.createElement("button");
-    btnAnterior.textContent = "❮ Anterior";
+    btnAnterior.textContent = t("cat.anterior");
     btnAnterior.className = "btn-paginacao";
     btnAnterior.disabled = paginaAtual === 1;
     btnAnterior.addEventListener("click", () => {
@@ -270,10 +280,11 @@ function renderizarControlesPaginacao() {
 
     const textoPagina = document.createElement("span");
     textoPagina.className = "texto-paginacao";
-    textoPagina.textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+    textoPagina.textContent = t("cat.paginaDe")
+        .replace("{a}", paginaAtual).replace("{b}", totalPaginas);
 
     const btnProximo = document.createElement("button");
-    btnProximo.textContent = "Próxima ❯";
+    btnProximo.textContent = t("cat.proxima");
     btnProximo.className = "btn-paginacao";
     btnProximo.disabled = paginaAtual === totalPaginas;
     btnProximo.addEventListener("click", () => {

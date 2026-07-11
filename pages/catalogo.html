@@ -41,8 +41,8 @@
     <main>
 
         <section class="catalogo-header">
-            <h2>Catálogo</h2>
-            <p class="catalogo-subtitulo">Explore mais de 25 mil produções brasileiras</p>
+            <h2 data-i18n="cat.titulo">Catálogo</h2>
+            <p class="catalogo-subtitulo" data-i18n="cat.subtitulo">Explore mais de 25 mil produções brasileiras</p>
         </section>
 
         <section class="filtros-container">
@@ -50,24 +50,24 @@
                 type="text"
                 id="filtro-busca"
                 class="filtro-input"
-                placeholder="Buscar por título..."
+                data-i18n-ph="cat.buscarPh" placeholder="Buscar por título..."
                 autocomplete="off"
             >
             <button id="btn-filtros" class="btn-filtros" type="button" aria-expanded="false" aria-controls="filtros-painel">
                 <svg class="icone-funil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                 </svg>
-                <span>Filtros</span>
+                <span data-i18n="cat.filtros">Filtros</span>
             </button>
-            <button id="filtro-limpar" class="filtro-btn-limpar">Limpar filtros</button>
+            <button id="filtro-limpar" class="filtro-btn-limpar" data-i18n="cat.limparFiltros">Limpar filtros</button>
         </section>
 
         <div id="filtros-painel" class="filtros-painel" hidden>
             <select id="filtro-genero" class="filtro-select">
-                <option value="">Todos os gêneros</option>
+                <option value="" data-i18n="cat.todosGeneros">Todos os gêneros</option>
             </select>
             <select id="filtro-decada" class="filtro-select">
-                <option value="">Todas as décadas</option>
+                <option value="" data-i18n="cat.todasDecadas">Todas as décadas</option>
                 <option value="1940">1940s</option>
                 <option value="1950">1950s</option>
                 <option value="1960">1960s</option>
@@ -79,19 +79,19 @@
                 <option value="2020">2020s</option>
             </select>
             <select id="filtro-metragem" class="filtro-select">
-                <option value="">Todas as metragens</option>
-                <option value="Curta">Curta (até 15 min)</option>
-                <option value="Média">Média (15 a 70 min)</option>
-                <option value="Longa">Longa (acima de 70 min)</option>
+                <option value="" data-i18n="cat.todasMetragens">Todas as metragens</option>
+                <option value="Curta" data-i18n="cat.curta">Curta (até 15 min)</option>
+                <option value="Média" data-i18n="cat.media">Média (15 a 70 min)</option>
+                <option value="Longa" data-i18n="cat.longa">Longa (acima de 70 min)</option>
             </select>
             <select id="filtro-estado" class="filtro-select">
-                <option value="">Todos os estados</option>
+                <option value="" data-i18n="cat.todosEstados">Todos os estados</option>
             </select>
             <input
                 type="text"
                 id="filtro-diretor"
                 class="filtro-input"
-                placeholder="Buscar por diretor..."
+                data-i18n-ph="cat.buscarDiretor" placeholder="Buscar por diretor..."
                 autocomplete="off"
             >
             <div class="filtro-ator-wrapper">
@@ -99,7 +99,7 @@
                     type="text"
                     id="filtro-ator"
                     class="filtro-input"
-                    placeholder="Buscar por ator (separe por vírgula)..."
+                    data-i18n-ph="cat.buscarAtor" placeholder="Buscar por ator (separe por vírgula)..."
                     autocomplete="off"
                 >
                 <ul id="ator-sugestoes" class="ator-sugestoes"></ul>

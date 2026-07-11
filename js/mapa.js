@@ -1,6 +1,7 @@
 "use strict";
 
 let filmesPorEstado = {};
+let ultimoEstadoPainel = null;   // {uf, nome, container} para re-render ao trocar idioma
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -25,6 +26,14 @@ async function inicializarMapa() {
         configurarEstados();
         criarRotulos();
         mostrarEstadoInicial();
+
+        // Ao trocar de idioma, re-renderiza o painel do estado selecionado
+        window.aoTrocarIdioma = () => {
+            if (ultimoEstadoPainel) {
+                gerarPainelEstado(ultimoEstadoPainel.uf, ultimoEstadoPainel.nome,
+                                  ultimoEstadoPainel.container);
+            }
+        };
     } catch (erro) {
         console.error("Erro ao carregar dados do mapa:", erro);
     }
@@ -167,6 +176,7 @@ function realcar(path, ativo) {
 // ---------------------------------------------------------------------------
 
 function gerarPainelEstado(uf, nome, container) {
+    ultimoEstadoPainel = { uf, nome, container };
     const filmes = filmesPorEstado[uf] || [];
     container.classList.add("visivel");
 
@@ -179,7 +189,7 @@ function gerarPainelEstado(uf, nome, container) {
             <div class="aviso-card">
                 <img src="${caminhoBandeira}" alt="Bandeira de ${nome}" class="bandeira-estado" onerror="this.style.display='none'">
                 <h3>${nome} <span class="painel-uf">${uf}</span></h3>
-                <p>Nenhuma produção catalogada para este estado ainda.</p>
+                <p>${t("mapa.semProducoes")}</p>
             </div>
         `;
         ocultarCarrosselEstado();
@@ -192,8 +202,8 @@ function gerarPainelEstado(uf, nome, container) {
             <img src="${caminhoBandeira}" alt="Bandeira de ${nome}" class="bandeira-estado" onerror="this.style.display='none'">
             <div class="painel-estado-info">
                 <h3>${nome} <span class="painel-uf">${uf}</span></h3>
-                <p class="painel-contagem">${filmes.length} ${filmes.length === 1 ? "produção catalogada" : "produções catalogadas"}</p>
-                <p class="painel-dica">Veja os filmes no carrossel abaixo do mapa.</p>
+                <p class="painel-contagem">${filmes.length} ${filmes.length === 1 ? t("mapa.producaoSing") : t("mapa.producaoPlur")}</p>
+                <p class="painel-dica">${t("mapa.dica")}</p>
             </div>
         </div>
     `;
@@ -212,7 +222,7 @@ function renderizarCarrosselEstado(nome, filmes) {
     if (!bloco || !track) return;
 
     const LIMITE = 30;
-    titulo.textContent = `Produções de ${nome}`;
+    titulo.textContent = t("mapa.producoesDe").replace("{nome}", nome);
     track.innerHTML = "";
 
     filmes.slice(0, LIMITE).forEach(filme => {
