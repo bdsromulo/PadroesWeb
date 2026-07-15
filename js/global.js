@@ -74,7 +74,7 @@ function criarCardFilme(filme) {
     const card = document.createElement("div");
     card.className = "filme-card";
     
-    const imageUrl = filme.poster_url || "../img/sem-poster.svg";
+    const imageUrl = filme.poster_url || "img/sem-poster.svg";
 
     // Avaliação e duração (só exibe se houver dado)
     const avaliacao = filme.avaliacao
@@ -87,7 +87,7 @@ function criarCardFilme(filme) {
     // Criação dos elementos internos do card
     card.innerHTML = `
         <div class="filme-poster-container">
-            <img src="${imageUrl}" alt="Pôster do filme ${filme.titulo}" class="filme-poster" loading="lazy" onerror="this.onerror=null;this.src='../img/sem-poster.svg';">
+            <img src="${imageUrl}" alt="Pôster do filme ${filme.titulo}" class="filme-poster" loading="lazy" onerror="this.onerror=null;this.src='img/sem-poster.svg';">
         </div>
         <div class="filme-info">
             <h3 class="filme-titulo">${filme.titulo}</h3>
@@ -104,7 +104,7 @@ function criarCardFilme(filme) {
     // Usa o tmdb_id (único) para evitar ambiguidade entre filmes de mesmo título.
     card.addEventListener("click", () => {
         const identificador = filme.tmdb_id || filme.id;
-        window.location.href = `detalhes.html?id=${identificador}`;
+        window.location.href = `detalhes?id=${identificador}`;
     });
     
     return card;

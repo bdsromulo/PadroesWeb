@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function inicializarMapa() {
     try {
-        const response = await fetch("../data/filmes.json");
+        const response = await fetch("data/filmes.json");
         const filmes = await response.json();
         indexarPorEstado(filmes);
         configurarEstados();
@@ -181,7 +181,7 @@ function gerarPainelEstado(uf, nome, container) {
     container.classList.add("visivel");
 
     // Monta o caminho da imagem dinamicamente baseado na sigla (ex: pr.png)
-    const caminhoBandeira = `../img/bandeiras/${uf.toLowerCase()}.png`;
+    const caminhoBandeira = `img/bandeiras/${uf.toLowerCase()}.png`;
 
     // Resumo compacto no painel lateral quando não há filmes
     if (filmes.length === 0) {

@@ -16,7 +16,7 @@ const filmesPorPagina = 12;
 
 async function carregarFilmes() {
     try {
-        const response = await fetch("../data/filmes.json");
+        const response = await fetch("data/filmes.json");
         todosFilmes = await response.json();
         filmesFiltrados = todosFilmes;
         todosAtores = [...new Set(todosFilmes.flatMap(f => f.elenco || []))].sort();

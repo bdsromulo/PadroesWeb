@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
 async function iniciar() {
     try {
         const [resBR, resINT] = await Promise.all([
-            fetch("../data/filmes.json"),
-            fetch("../data/internacionais.json")
+            fetch("data/filmes.json"),
+            fetch("data/internacionais.json")
         ]);
         filmesBR   = await resBR.json();
         poolFilmes = await resINT.json();
@@ -148,12 +148,12 @@ function renderizarPool() {
         if (selecionados.has(filme.id)) tile.classList.add("selecionado");
         else if (limiteAtingido) tile.classList.add("desabilitado");
 
-        const poster = filme.poster_url || "../img/sem-poster.svg";
+        const poster = filme.poster_url || "img/sem-poster.svg";
         const ano = filme.ano ? `<span class="selecao-ano">${filme.ano}</span>` : "";
         tile.innerHTML = `
             <div class="selecao-poster">
                 <img src="${poster}" alt="${filme.titulo}" loading="lazy"
-                     onerror="this.onerror=null;this.src='../img/sem-poster.svg';">
+                     onerror="this.onerror=null;this.src='img/sem-poster.svg';">
                 <span class="selecao-check">✓</span>
             </div>
             <p class="selecao-titulo">${filme.titulo} ${ano}</p>
@@ -398,10 +398,10 @@ function montarRacional(ranqueados) {
 
     painel.innerHTML = ranqueados.map(item => {
         const f = item.filme;
-        const capaBR = f.poster_url || "../img/sem-poster.svg";
+        const capaBR = f.poster_url || "img/sem-poster.svg";
 
         const conexoesHtml = item.conexoes.map(c => {
-            const capaINT = c.ref.poster_url || "../img/sem-poster.svg";
+            const capaINT = c.ref.poster_url || "img/sem-poster.svg";
             const fatores = [];
             if (c.generos.length) {
                 fatores.push(`<div class="racional-fator"><span class="racional-rotulo">Gêneros</span>${c.generos.map(g => chip(g)).join("")}</div>`);
@@ -416,7 +416,7 @@ function montarRacional(ranqueados) {
                 <div class="racional-conexao">
                     <div class="racional-origem">
                         <img src="${capaINT}" alt="${c.ref.titulo}" loading="lazy"
-                             onerror="this.onerror=null;this.src='../img/sem-poster.svg';">
+                             onerror="this.onerror=null;this.src='img/sem-poster.svg';">
                         <span>${c.ref.titulo}</span>
                     </div>
                     <div class="racional-fatores">${fatores.join("")}</div>
@@ -428,7 +428,7 @@ function montarRacional(ranqueados) {
             <div class="racional-item">
                 <div class="racional-cabecalho">
                     <img class="racional-capa-br" src="${capaBR}" alt="${f.titulo}" loading="lazy"
-                         onerror="this.onerror=null;this.src='../img/sem-poster.svg';">
+                         onerror="this.onerror=null;this.src='img/sem-poster.svg';">
                     <div>
                         <p class="racional-titulo">${f.titulo}</p>
                         <p class="racional-afinidade">afinidade ${Math.round(item.score)}</p>

@@ -170,7 +170,7 @@ function renderizarDestaques() {
 async function carregarDestaques() {
     const container = document.getElementById("destaques-container");
     try {
-        const resp = await fetch("../data/filmes.json");
+        const resp = await fetch("data/filmes.json");
         TODOS_FILMES = await resp.json();
         renderizarDestaques();
         // Re-renderiza (sem re-baixar) ao trocar de idioma

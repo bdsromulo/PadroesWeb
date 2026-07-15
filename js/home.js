@@ -8,7 +8,7 @@ async function carregarContagemAcervo() {
     const alvo = document.getElementById("acervo-contagem");
     if (!alvo) return;
     try {
-        const response = await fetch("../data/filmes.json");
+        const response = await fetch("data/filmes.json");
         const filmes = await response.json();
         animarContagem(alvo, filmes.length);
     } catch (erro) {

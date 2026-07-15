@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function carregarSinopsesEn() {
     if (SINOPSES_EN) return SINOPSES_EN;
     try {
-        const r = await fetch("../data/sinopses_en.json");
+        const r = await fetch("data/sinopses_en.json");
         SINOPSES_EN = r.ok ? await r.json() : {};
     } catch (e) {
         SINOPSES_EN = {};
@@ -29,7 +29,7 @@ async function carregarDetalhesFilme() {
     }
 
     try {
-        const response = await fetch("../data/filmes.json");
+        const response = await fetch("data/filmes.json");
         const filmes = await response.json();
 
         // Busca pelo tmdb_id (único). Mantém o slug como fallback para links antigos.
@@ -123,7 +123,7 @@ function preencherPagina(filme) {
     if (lbRow && lbLink) {
         if (filme.tmdb_id) {
             lbLink.href = `https://letterboxd.com/tmdb/${filme.tmdb_id}`;
-            lbLink.innerHTML = `<img src="../img/logo_letterboxd.svg" alt="Ver no Letterboxd" class="letterboxd-logo">`;
+            lbLink.innerHTML = `<img src="img/logo_letterboxd.svg" alt="Ver no Letterboxd" class="letterboxd-logo">`;
             lbRow.style.display = "";
         } else {
             lbRow.style.display = "none";
@@ -133,9 +133,9 @@ function preencherPagina(filme) {
     // Poster
     const posterEl = document.getElementById("poster");
     if (posterEl) {
-        posterEl.src    = filme.poster_url || "../img/sem-poster.svg";
+        posterEl.src    = filme.poster_url || "img/sem-poster.svg";
         posterEl.alt    = `Pôster do filme ${filme.titulo}`;
-        posterEl.onerror = function () { this.onerror = null; this.src = "../img/sem-poster.svg"; };
+        posterEl.onerror = function () { this.onerror = null; this.src = "img/sem-poster.svg"; };
     }
 
     // Backdrop como banner acima do conteúdo
@@ -234,6 +234,6 @@ function preencherLista(elementoId, arrayDeItems) {
 function exibirErro(mensagem) {
     const container = document.querySelector(".detalhes-container");
     if (container) {
-        container.innerHTML = `<h2>Oops!</h2><p>${mensagem}</p><a href="catalogo.html">Voltar ao catálogo</a>`;
+        container.innerHTML = `<h2>Oops!</h2><p>${mensagem}</p><a href="catalogo">Voltar ao catálogo</a>`;
     }
 }
