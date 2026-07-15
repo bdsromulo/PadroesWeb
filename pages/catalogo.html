@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cine Brasilis</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg">
+    <!-- URL antiga. A pagina agora e servida em /catalogo -->
+    <link rel="canonical" href="/catalogo">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="refresh" content="0; url=/catalogo">
+</head>
+<body>
+    <p>Esta pagina agora fica em <a href="/catalogo">/catalogo</a>. Redirecionando&hellip;</p>
+    <script>
+        // A query string (ex.: ?id=598) precisa sobreviver ao redirecionamento,
+        // o que o meta refresh acima nao faz sozinho.
+        window.location.replace("/catalogo" + window.location.search + window.location.hash);
+    </script>
+</body>
+</html>
