@@ -134,6 +134,14 @@
     background: var(--cor-card-hover);
 }
 
+/* Cards estreitos: o justify herdado de `main p` abre buracos entre as
+   palavras e a hifenização quebra títulos curtos. */
+.explore-card p {
+    text-align: left;
+    hyphens: manual;
+    -webkit-hyphens: manual;
+}
+
 .explore-titulo {
     margin: 0;
     font-size: 15px;

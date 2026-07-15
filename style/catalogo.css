@@ -67,7 +67,9 @@
     gap: 16px;
     margin-bottom: 16px;
     padding: 18px;
-    background: #f4f4f0;
+    /* Um tom acima do fundo, para o painel destacar sem virar mancha clara no
+       tema escuro — e os campos (--cor-card) continuam contrastando por baixo. */
+    background: var(--cor-card-hover);
     border: 1px solid var(--cor-borda);
     border-radius: 10px;
 }

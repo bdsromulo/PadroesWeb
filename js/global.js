@@ -159,7 +159,8 @@ function montarCafezinho() {
                  dispara o lazy-load de imagem em container escondido — o QR
                  ficaria em branco justamente para quem abrisse o painel. -->
             <img class="cafezinho-qr" src="img/pix-qr.svg" width="168" height="168"
-                 alt="QR Code para pagamento via PIX">
+                 alt="QR Code PIX do Cine Brasilis">
+            <p class="cafezinho-chave-label" data-i18n="cafe.chaveLabel">Chave PIX (copia e cola)</p>
             <div class="cafezinho-chave">
                 <code title="${PIX_PAYLOAD}">${PIX_PAYLOAD}</code>
                 <button type="button" class="cafezinho-copiar" data-i18n="cafe.copiar">Copiar</button>

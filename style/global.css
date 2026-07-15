@@ -467,6 +467,13 @@ html[data-idioma="en"] .cafezinho-secao {
     border-radius: 6px;
 }
 
+.cafezinho-chave-label {
+    margin: 0 0 0.3rem;
+    font-size: 0.72rem;
+    font-weight: bold;
+    color: var(--cor-texto-suave);
+}
+
 .cafezinho-chave {
     display: flex;
     align-items: center;

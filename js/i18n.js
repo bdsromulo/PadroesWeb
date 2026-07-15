@@ -99,7 +99,7 @@ const I18N = {
         // então não há (nem deve haver) equivalente em I18N.en.
         "cafe.pilula": "Me pague um cafezinho",
         "cafe.titulo": "Me pague um cafezinho",
-        "cafe.texto": "Se o Cine Brasilis te fez descobrir um filme que você não conhecia, dá pra agradecer com um cafezinho. É opcional, e o site continua o mesmo sem isso.",
+        "cafe.texto": "Se o Cine Brasilis te fez descobrir um filme que você não conhecia, dá pra agradecer com um cafezinho via PIX: escaneie o QR Code abaixo ou copie a chave. É opcional, e o site continua o mesmo sem isso.",
         "cafe.chaveLabel": "Chave PIX (copia e cola)",
         "cafe.copiar": "Copiar",
         "cafe.copiado": "Copiado!",
