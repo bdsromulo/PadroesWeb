@@ -242,14 +242,30 @@ function criarGrupoProviders(rotulo, provedores) {
         const li = document.createElement("li");
         li.className = "oa-provider";
         li.title = p.nome;
-        if (p.logo) {
-            const img = document.createElement("img");
-            img.src = `${LOGO_PROVIDER_BASE}${p.logo}`;
-            img.alt = p.nome;
-            img.loading = "lazy";
-            li.appendChild(img);
+
+        // Fonte da logo: caminho local (asset próprio) ou path do TMDB
+        const src = p.logoLocal || (p.logo ? `${LOGO_PROVIDER_BASE}${p.logo}` : "");
+        let conteudo;
+        if (src) {
+            conteudo = document.createElement("img");
+            conteudo.src = src;
+            conteudo.alt = p.nome;
+            conteudo.loading = "lazy";
         } else {
-            li.textContent = p.nome;
+            conteudo = document.createTextNode(p.nome);
+        }
+
+        // Provider com link direto (ex.: YouTube grátis) fica clicável
+        if (p.url) {
+            const a = document.createElement("a");
+            a.href = p.url;
+            a.target = "_blank";
+            a.rel = "noopener";
+            a.setAttribute("aria-label", p.nome);
+            a.appendChild(conteudo);
+            li.appendChild(a);
+        } else {
+            li.appendChild(conteudo);
         }
         lista.appendChild(li);
     });
@@ -266,20 +282,17 @@ function preencherOndeAssistir(filme) {
     const oa = filme.onde_assistir || {};
     let temConteudo = false;
 
-    // Link gratuito no YouTube (destaque)
+    // Vídeo completo mapeado no YouTube entra como provider gratuito clicável
+    const gratis = (oa.free || []).concat(oa.ads || []);
     if (filme.youtube_gratis) {
-        const botao = document.createElement("a");
-        botao.className = "oa-youtube-btn";
-        botao.href = filme.youtube_gratis;
-        botao.target = "_blank";
-        botao.rel = "noopener";
-        botao.textContent = `▶ ${t("det.oaGratisYoutube")}`;
-        container.appendChild(botao);
-        temConteudo = true;
+        gratis.unshift({
+            nome: "YouTube",
+            logoLocal: "img/logo_youtube.svg",
+            url: filme.youtube_gratis
+        });
     }
 
     // Grupos de providers (dados JustWatch via TMDB)
-    const gratis = (oa.free || []).concat(oa.ads || []);
     const grupos = [
         [t("det.oaStreaming"), oa.flatrate || []],
         [t("det.oaGratis"),    gratis],
@@ -304,6 +317,18 @@ function preencherOndeAssistir(filme) {
             `<p class="oa-vazio-texto">${t("det.oaVazio")}</p>`;
         container.appendChild(vazio);
     }
+
+    // Botão de busca no YouTube: sempre disponível (identidade do YouTube)
+    const busca = document.createElement("a");
+    busca.className = "oa-youtube-btn";
+    busca.href = "https://www.youtube.com/results?search_query=" +
+        encodeURIComponent(`${filme.titulo} COMPLETO`);
+    busca.target = "_blank";
+    busca.rel = "noopener";
+    busca.innerHTML =
+        '<img src="img/logo_youtube.svg" alt="" class="oa-youtube-btn-icone">' +
+        `<span>${t("det.oaBuscarYoutube")}</span>`;
+    container.appendChild(busca);
 
     // Atribuição JustWatch: obrigatória sempre que os providers aparecem
     const fonte = document.getElementById("onde-assistir-fonte");
