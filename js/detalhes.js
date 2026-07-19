@@ -322,7 +322,7 @@ function preencherOndeAssistir(filme) {
     const busca = document.createElement("a");
     busca.className = "oa-youtube-btn";
     busca.href = "https://www.youtube.com/results?search_query=" +
-        encodeURIComponent(`${filme.titulo} COMPLETO`);
+        encodeURIComponent(`"${filme.titulo}" FILME COMPLETO`);
     busca.target = "_blank";
     busca.rel = "noopener";
     busca.innerHTML =
