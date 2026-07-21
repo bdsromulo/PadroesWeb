@@ -117,34 +117,37 @@ function montarCategorias() {
         .slice(0, LIMITE);
     cats.push(["(Muito) Trapalhões", trapalhoes]);
 
-    // 7) Cristãos Cinéfilos — obras de temática cristã/religiosa (exclui sátiras)
-    const cristaosFixos = porTitulos([
-        "Os Dez Mandamentos: O Filme", "Nada a Perder",
-        "Nada a Perder 2: Segundos Depois do Início", "O Pagador de Promessas",
-    ]);
-    // Cunho exclusivamente católico/evangélico (exclui espiritismo e não-cristãos)
-    const marcCristaos = ["jesus", "cristo", "crist", "biblia", "evangel", "mandament",
-                          "catolic", "igreja", "padre", "santa dulce"];
-    const marcExcluir  = ["espirit", "kardec", "chico xavier", "umbanda", "candomble",
-                          "reencarna", "psicograf", "medium"];
-    const titulosExcluir = new Set([
-        "kardec", "faroeste caboclo", "nosso lar", "nosso lar 2: os mensageiros",
-        "chico xavier", "as maes de chico xavier", "as cartas de chico xavier",
-        "data limite segundo chico xavier", "divaldo: o mensageiro da paz",
-        "bezerra de menezes: o diario de um espirito",
-        "o espiritismo de kardec aos dias de hoje",
-    ].map(normalizar));
-    const ehCristao = (f) => {
-        if (temGenero(f, "Comédia")) return false; // evita sátiras (Porta dos Fundos etc.)
-        if (titulosExcluir.has(normalizar(f.titulo))) return false;
-        const campos = normalizar([f.titulo, f.sinopse, (f.tags || []).join(" ")].join(" "));
-        if (marcExcluir.some(m => campos.includes(m))) return false; // fora espiritismo etc.
-        return marcCristaos.some(m => campos.includes(m));
-    };
-    cats.push(["Cristãos Cinéfilos", completar(
-        cristaosFixos,
-        f => ehCristao(f) && (f.avaliacao || 0) > 0,
-        porVotos, LIMITE)]);
+    // 7) Cristãos Cinéfilos — curadoria 100% manual, sem preenchimento automático.
+    // A busca por palavras na sinopse era inviável aqui: "crist" casa com nomes
+    // próprios (Cristiano, Cristian), "Santo Cristo" é o personagem de Faroeste
+    // Caboclo e "deus" casa com Cidade de Deus. Todo título abaixo foi conferido
+    // um a um: a fé cristã é tema central da obra, não menção de passagem.
+    // Ficam fora sátiras (Porta dos Fundos, Hermanoteu) e espiritismo/kardecismo,
+    // que não é cristianismo (Chico Xavier, Nosso Lar, Kardec).
+    cats.push(["Cristãos Cinéfilos", porTitulos([
+        "Os Dez Mandamentos: O Filme",   // saga de Moisés, adaptação bíblica
+        "O Pagador de Promessas",        // promessa a santa e conflito com a Igreja
+        "Nada a Perder",                 // cinebiografia do bispo Edir Macedo
+        "Brincando nos Campos do Senhor", // missionários evangélicos na Amazônia
+        "Batismo de Sangue",             // frades dominicanos sob a ditadura
+        "Diário de Um Exorcista - Zero", // exorcista católico
+        "Irmã Dulce",                    // cinebiografia da religiosa beatificada
+        "Maria: Mãe do Filho de Deus",   // vida de Jesus pela ótica de Maria
+        "Aparecida - O Milagre",         // devoção a Nossa Senhora Aparecida
+        "Irmãos de Fé",                  // vida do apóstolo Paulo
+        "No Ritmo da Fé",                // drama evangélico
+        "O Pastor e o Guerrilheiro",     // cristão evangélico preso na ditadura
+        "Missão de Fé",                  // casal missionário
+        "Renascer",                      // jovens missionárias
+        "A Vida de Jesus Cristo",
+        "Padre Cícero: Os Milagres de Juazeiro",
+        "O Apóstolo do Brasil - A Missão de São José de Anchieta",
+        "O Milagre - O Poder da Fé",
+        "O Chamado de Deus",             // documentário sobre vocação religiosa
+        "Estrela da Manhã",              // documentário sobre monsenhor Nakamura
+        "Um Santo entre Nós",            // documentário sobre São Josemaria Escrivá
+        "Fé em Deus",
+    ]).slice(0, LIMITE)]);
 
     // 8) Fã Clube da Klara Castanho — filmografia da Klara Castanho
     const klara = TODOS_FILMES
